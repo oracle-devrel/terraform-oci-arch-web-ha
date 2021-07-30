@@ -1,0 +1,367 @@
+## Copyright (c) 2021 Oracle and/or its affiliates.
+## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+    title: "Create highly available three-tier web application in Oracle Cloud Infrastructure"
+    stackDescription: "Deploy a highly available three-tier web application in Oracle Cloud Infrastructure."
+    schemaVersion: 1.1.0
+    version: "20190404"
+    locale: "en"
+
+    variableGroups:
+    - title: General Configuration
+      visible: false
+      variables:
+      - tenancy_ocid
+      - region
+      - release
+      - private_key
+      - private_key_path
+      - private_key_password
+      - availability_domain
+      - fingerprint
+      - user_ocid
+      - ssh_public_key_path
+
+    - title: Required Configuration
+      visible: true  
+      variables:
+      - ATP_password
+      - ATP_private_endpoint 
+      - compartment_ocid
+      - availability_domain_name
+      - show_advanced
+
+    - title: Load Balancer Optional Configuration
+      visible: 
+          and:
+            - show_advanced
+      variables:
+      - lb_shape
+      - flex_lb_min_shape
+      - flex_lb_max_shape 
+
+    - title: Compute Optional Configuration
+      visible: 
+          and:
+            - show_advanced
+      variables:
+      - ssh_public_key
+      - instance_os
+      - linux_os_version 
+      - instance_shape
+      - instance_flex_shape_ocpus
+      - instance_flex_shape_memory
+
+    - title: ATP Optional Configuration
+      visible: 
+          and:
+            - show_advanced
+      variables: 
+      - ATP_data_guard_enabled
+      - ATP_database_cpu_core_count
+      - ATP_database_data_storage_size_in_tbs
+      - ATP_database_db_name
+      - ATP_database_db_version
+      - ATP_database_defined_tags_value
+      - ATP_database_display_name
+      - ATP_database_freeform_tags
+      - ATP_database_license_model
+      - ATP_tde_wallet_zip_file
+      - ATP_private_endpoint_label
+
+    variables:
+
+      show_advanced:
+        type: boolean
+        title: "Show advanced options?"
+        description: "Shows advanced options."
+        visible: true
+        default: false
+      
+      compartment_ocid:
+        type: oci:identity:compartment:id
+        required: true
+        visibile: true
+        title: Compartment
+        description: "Compartment where you want to create the solution resources"
+
+      region:
+        type: oci:identity:region:name
+        required: true
+        visibile: true
+        title: Region
+        description: "Region where you want to deploy the resources defined by this stack."
+
+      availability_domain_name:
+        type: oci:identity:availabilitydomain:name
+        required: true
+        visibile: true
+        title: "Availability Domain to be chosen"
+        description: "Availability Domain to be chosen"
+        dependsOn:
+          compartmentId: ${compartment_ocid}
+
+      ATP_password:
+        type: password
+        required: true
+        visibile: true
+        title: "ATP Database Password for ADMIN user."
+        description: "ATP Database Password for ADMIN user."
+        minLength: 12
+        maxLength: 30
+        pattern: ^[A-Za-z][A-Za-z0-9_#\$]+$ 
+
+
+      # Optional Configuration      
+      lb_shape:
+        type: enum
+        title: "Load Balancer Shape"
+        description: "Load Balancer Shape"
+        default: "flexible"
+        required: false 
+        enum:
+          - "flexible"
+          - "100Mbps"
+          - "10Mbps"
+          - "10Mbps-Micro"
+          - "400Mbps"
+          - "8000Mbps"
+
+      flex_lb_min_shape:
+        type: enum
+        required: false
+        default: "10"
+        title: "LB Flex Min Shape"
+        description: "Choose Minimum Shape for Flex Load Balancer."
+        enum:
+          - "10"
+          - "100"
+          - "1000"
+          - "400"
+          - "8000"
+        visible:
+          and:
+            - eq:
+              - lb_shape 
+              - "flexible"
+
+      flex_lb_max_shape:
+        type: enum
+        required: false
+        default: "100"
+        title: "LB Flex Max Shape"
+        description: "Choose Maximum Shape for Flex Load Balancer."
+        enum:
+          - "10"
+          - "100"
+          - "1000"
+          - "400"
+          - "8000"
+        visible:
+          and:
+            - eq:
+              - lb_shape 
+              - "flexible"
+
+      ssh_public_key:
+        type: oci:core:ssh:publickey
+        title: "Public SSH Key"
+        description: "Choose public SSH Key to be uploaded into compute instances."
+        required: false
+
+      instance_shape:
+        type: oci:core:instanceshape:name
+        required: false
+        title: "Instance Shape"
+        description: "A shape is a template that determines the number of CPUs, amount of memory, and other resources allocated to a newly created instance."
+        default: "VM.Standard.E3.Flex"
+        dependsOn:
+          compartmentId: ${compartment_ocid}
+
+      instance_flex_shape_ocpus:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 1
+        title: "Flex Shape OCPUs"
+        description: "Choose number of OCPUs for Flex Shape."
+        visible:
+          and:
+            - or:
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E3.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E4.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Optimized3.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Standard.A1.Flex"
+
+      instance_flex_shape_memory:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 10
+        title: "Flex Shape Memory (GB)"
+        description: "Choose number GB for Flex Shape Memory."
+        visible:
+          and:
+            - or:
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E3.Flex"
+              - eq:
+                - instance_shape
+                - "VM.Standard.E4.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Optimized3.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Standard.A1.Flex"
+      
+      instance_os:
+        type: enum
+        required: false
+        title: "Instance OS"
+        description: "An Operating System that determines the operating system for the instance."
+        default: "Oracle Linux"
+        enum:
+          - "Oracle Linux"
+      
+      linux_os_version:
+        type: enum
+        required: false
+        title: "Instance OS version"
+        description: "An Operating System version that determines the operating system version for the instance."
+        default: "7.9"
+        enum: 
+          - "7.8"
+          - "7.9"
+
+      ATP_private_endpoint:
+        type: boolean
+        visibile: true
+        default: false
+        required: false
+        title: "ATP Database Private Endpoint"
+        description: "Check the box to deploy ATP Database with Private Endpoint."
+
+      ATP_data_guard_enabled:
+        type: boolean
+        required: true
+        visibile: true
+        default: false
+        title: "ATP Database DataGuard" 
+        description: "Check the box to enable ATP Database DataGuard." 
+
+      ATP_database_cpu_core_count:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 1
+        title: "ATP Database CPU Core Count"
+        description: "Choose ATP Database CPU Core Count."
+
+      ATP_database_data_storage_size_in_tbs:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 1
+        title: "ATP Database Data Storage Size (TB)"
+        description: "Choose ATP Database Data Storage Size in terabytes."
+
+      ATP_database_db_name:
+        type: string
+        required: false
+        default: "atpdb1"
+        title: "ATP Database DBNAME"
+        description: "Choose ATP Database DBNAME."
+
+      ATP_database_db_version:
+        type: enum
+        required: false
+        default: "19c"
+        title: "ATP Database Version"
+        description: "Choose ATP Database Version."
+        enum:
+          - "19c"
+
+      ATP_database_display_name:
+        type: string
+        required: false
+        default: "ATPDB"
+        title: "ATP Database Display Name"
+        description: "Choose ATP Database Display Name."
+
+      ATP_database_license_model:
+        type: enum
+        required: false
+        default: "LICENSE_INCLUDED"
+        title: "ATP Database License Model"
+        description: "Choose ATP Database License Model."
+        enum:
+          - "LICENSE_INCLUDED"
+          - "BRING_YOUR_OWN_LICENSE"
+
+      ATP_tde_wallet_zip_file:
+        type: string
+        required: false
+        visible: false
+        default: "tde_wallet_ATPdb1.zip"
+        title: "ATP Database TDE Wallet ZIP File"
+        description: "Choose ATP Database TDE Wallet ZIP File."
+      
+      ATP_private_endpoint_label:
+        type: string
+        required: false
+        visible: 
+            and:
+              - ATP_private_endpoint
+        default: "ATPPrivateEndpoint"
+        title: "ATP Database Private Endpoint Label"
+        description: "Choose ATP Database Private Endpoint Label"
+
+      ATP_database_freeform_tags:
+        type: string
+        required: false
+        title: "ATP Database Freeform Tags"
+        description: "Choose ATP Database Freeform Tags"
+
+      ATP_database_defined_tags_value:
+        type: string
+        required: false
+        title: "ATP Database Defined Tags"
+        description: "Choose ATP Database Defined Tags"
+      
+      release:
+        type: string
+        required: false
+        visible: false
+        title: "Reference Architecture Release (OCI Architecture Center)"
+
+    outputs:
+
+      generated_ssh_private_key:
+        title: "Generated SSH Private Key"
+        displayText: "Generated SSH Private Key"
+        type: copyableString
+        visible: true
+
+      loadbalancer_public_url:
+        title: "Loadbalancer Public URL"
+        displayText: "Loadbalancer Public URL"
+        type: string
+        visible: true
