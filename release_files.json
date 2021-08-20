@@ -1,0 +1,31 @@
+// see https://github.com/oracle-devrel/action-release-zip-maker for docs
+[
+  {
+    "action": "create_zip",
+    "file_name": "terraform-oci-arch-web-ha-stack-latest.zip",
+    "files": [
+      {
+        "src_pattern": "*.tf",
+        "dst_path": ".",
+        "exclude": [
+          "provider.tf"
+        ]
+      },
+      {
+        "src": "LICENSE"
+      },
+      {
+        "src": "schema.yaml",
+        "dst": "schema.yaml"
+      },
+      {
+        "src": "orm/provider.tf",
+        "dst": "provider.tf"
+      }
+    ]
+  },
+  {
+    "action": "upload_file",
+    "file_name": "terraform-oci-arch-web-ha-stack-latest.zip"
+  }
+]
