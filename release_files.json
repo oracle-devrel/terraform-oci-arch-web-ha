@@ -21,7 +21,19 @@
       {
         "src": "orm/provider.tf",
         "dst": "provider.tf"
-      }
+      },
+      {
+        "src": "scripts/*",
+        "dst": "scripts/"
+      },
+      {
+        "src": "flask_dir/*",
+        "dst": "flask_dir/"
+      },
+      {
+        "src": "db_scripts/*",
+        "dst": "db_scripts/"
+      },            
     ]
   },
   {
