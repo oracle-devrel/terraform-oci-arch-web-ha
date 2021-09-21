@@ -23,16 +23,13 @@
         "dst": "provider.tf"
       },
       {
-        "src": "scripts/*",
-        "dst": "scripts/"
+        "src_pattern": "scripts/*"
       },
       {
-        "src": "flask_dir/*",
-        "dst": "flask_dir/"
+        "src_pattern": "flask_dir/*"
       },
       {
-        "src": "db_scripts/*",
-        "dst": "db_scripts/"
+        "src_pattern": "db_scripts/*"
       },            
     ]
   },
