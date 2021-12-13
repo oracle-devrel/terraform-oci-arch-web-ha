@@ -139,5 +139,5 @@ locals {
   is_flexible_node_shape = contains(local.compute_flexible_shapes, var.instance_shape)
 
   availability_domain_name = var.availability_domain_name == "" ? lookup(data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain_number], "name") : var.availability_domain_name
-  ssh_public_key           = var.ssh_public_key == "" ? file(var.ssh_public_key_path) : var.ssh_public_key
+  #ssh_public_key           = var.ssh_public_key == "" ? file(var.ssh_public_key_path) : var.ssh_public_key
 }
