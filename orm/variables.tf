@@ -6,15 +6,21 @@ variable "tenancy_ocid" {}
 variable "compartment_ocid" {
   default = ""
 }
-variable "user_ocid" {
-  default = ""
-}
-variable "fingerprint" {
-  default = ""
-}
-variable "private_key_path" {
-  default = ""
-}
+#variable "user_ocid" {
+#  default = ""
+#}
+#variable "fingerprint" {
+#  default = ""
+#}
+#variable "private_key" {
+#  default = ""
+#}
+#variable "private_key_path" {
+#  default = ""
+#}
+#variable "private_key_password" {
+#  default = ""
+#}
 variable "region" {}
 variable "ATP_password" {}
 variable "availability_domain_number" {
