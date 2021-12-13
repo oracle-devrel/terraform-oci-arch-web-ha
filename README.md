@@ -51,7 +51,6 @@ tenancy_ocid         = "<tenancy_ocid>"
 user_ocid            = "<user_ocid>"
 fingerprint          = "<finger_print>"
 private_key_path     = "<pem_private_key_path>"
-private_key_password = "<pem_private_key_password>"
 
 # SSH Keys
 ssh_public_key       = "<contents_of_public_ssh_key>"
@@ -66,7 +65,7 @@ ATP_data_guard_enabled = false # set the value to true only when you want to ena
 region = "<oci_region>"
 
 # Availability Domain 
-availability_domain = "<availability_domain_number>"
+availability_domain_number = "<availability_domain_number>"
 ### USE ONE ^ OR THE OTHER v
 availability_domain_name = "<availability_domain_name>"
 
@@ -91,26 +90,22 @@ It's possible to utilize this as a module, providing the necessary inputs:
 
 ```
 module "terraform-oci-arch-web-ha" {
-  source               = "github.com/oracle-devrel/terraform-oci-arch-web-ha"
-  tenancy_ocid         = "<tenancy_ocid>"
-  user_ocid            = "<user_ocid>"
-  fingerprint          = "<finger_print>"
-  region               = "<oci_region>"
-  availability_domain  = "<availability_domain_number>"
-  compartment_ocid     = "<compartment_ocid>"
-  
-  private_key          = "<contents_of_private_key>"
-  ### USE ONE ^ OR THE OTHER v
-  private_key_path     = "<pem_private_key_path>"
-  private_key_password = "<pem_private_key_password>"
+  source                      = "github.com/oracle-devrel/terraform-oci-arch-web-ha"
+  tenancy_ocid                = "<tenancy_ocid>"
+  user_ocid                   = "<user_ocid>"
+  fingerprint                 = "<finger_print>"
+  region                      = "<oci_region>"
+  availability_domain_number  = "<availability_domain_number>"
+  compartment_ocid            = "<compartment_ocid>"
+  private_key_path            = "<pem_private_key_path>"
 
   # SSH Keys
-  ssh_public_key       = "<contents_of_public_ssh_key>"
+  ssh_public_key              = "<contents_of_public_ssh_key>"
   ### USE ONE ^ OR THE OTHER v
-  ssh_public_key_path  = "<public_ssh_key_path>"
+  ssh_public_key_path         = "<public_ssh_key_path>"
 
-  ATP_password           = "<ATP_user_password>"
-  ATP_data_guard_enabled = false # set the value to true only when you want to enable standby and then re-run terraform apply
+  ATP_password                = "<ATP_user_password>"
+  ATP_data_guard_enabled      = false # set the value to true only when you want to enable standby and then re-run terraform apply
 }
 ```
 

@@ -25,6 +25,7 @@
     - title: Required Configuration
       visible: true  
       variables:
+      - ssh_public_key
       - ATP_password
       - ATP_private_endpoint 
       - compartment_ocid
@@ -45,7 +46,6 @@
           and:
             - show_advanced
       variables:
-      - ssh_public_key
       - instance_os
       - linux_os_version 
       - instance_shape
@@ -167,7 +167,7 @@
         type: oci:core:ssh:publickey
         title: "Public SSH Key"
         description: "Choose public SSH Key to be uploaded into compute instances."
-        required: false
+        required: true
 
       instance_shape:
         type: oci:core:instanceshape:name
@@ -250,7 +250,7 @@
       ATP_private_endpoint:
         type: boolean
         visibile: true
-        default: false
+        default: true
         required: false
         title: "ATP Database Private Endpoint"
         description: "Check the box to deploy ATP Database with Private Endpoint."

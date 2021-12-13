@@ -8,7 +8,8 @@
         "src_pattern": "*.tf",
         "dst_path": ".",
         "exclude": [
-          "provider.tf"
+          "provider.tf",
+          "variables.tf"
         ]
       },
       {
@@ -21,6 +22,10 @@
       {
         "src": "orm/provider.tf",
         "dst": "provider.tf"
+      },
+      {
+        "src": "orm/variables.tf",
+        "dst": "variables.tf"
       },
       {
         "src_pattern": "scripts/*"
