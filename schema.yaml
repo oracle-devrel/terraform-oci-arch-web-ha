@@ -17,7 +17,7 @@
       - private_key
       - private_key_path
       - private_key_password
-      - availability_domain
+      - availability_domain_number
       - fingerprint
       - user_ocid
       - ssh_public_key_path
@@ -25,11 +25,10 @@
     - title: Required Configuration
       visible: true  
       variables:
-      - ssh_public_key
-      - ATP_password
-      - ATP_private_endpoint 
       - compartment_ocid
       - availability_domain_name
+      - ATP_password
+      - ATP_private_endpoint 
       - show_advanced
 
     - title: Load Balancer Optional Configuration
@@ -46,6 +45,7 @@
           and:
             - show_advanced
       variables:
+      - ssh_public_key
       - instance_os
       - linux_os_version 
       - instance_shape
@@ -167,7 +167,7 @@
         type: oci:core:ssh:publickey
         title: "Public SSH Key"
         description: "Choose public SSH Key to be uploaded into compute instances."
-        required: true
+        required: false
 
       instance_shape:
         type: oci:core:instanceshape:name
