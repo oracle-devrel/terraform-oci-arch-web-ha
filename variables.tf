@@ -45,7 +45,7 @@ variable "flex_lb_min_shape" {
 }
 
 variable "flex_lb_max_shape" {
-  default = "100"
+  default = "10"
 }
 
 # OS Images
