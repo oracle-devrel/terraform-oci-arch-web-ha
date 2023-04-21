@@ -55,3 +55,25 @@ resource "oci_load_balancer_listener" "lb-listener1" {
   port                     = 80
   protocol                 = "HTTP"
 }
+
+resource "oci_load_balancer_backend" "lb-be1" {
+  load_balancer_id = oci_load_balancer.lb1.id
+  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
+  ip_address       = oci_core_instance.compute_instance1.private_ip
+  port             = 5000
+  backup           = false
+  drain            = false
+  offline          = false
+  weight           = 1
+}
+
+resource "oci_load_balancer_backend" "lb-be2" {
+  load_balancer_id = oci_load_balancer.lb1.id
+  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
+  ip_address       = oci_core_instance.compute_instance2.private_ip
+  port             = 5000
+  backup           = false
+  drain            = false
+  offline          = false
+  weight           = 1
+}
